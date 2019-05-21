@@ -34,15 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void getWeather(View view) {
 
-
         DownloadTask task = new DownloadTask();
         task.execute("https://samples.openweathermap.org/data/2.5/weather?q="+ editText.getText().toString() +"&appid=b6907d289e10d714a6e88b30761fae22");
     }
-
-
-
-
-
 
     public class DownloadTask extends AsyncTask<String, Void, String> {
 
@@ -90,11 +84,21 @@ public class MainActivity extends AppCompatActivity {
 
             JSONArray arr = new JSONArray(results);
 
+            String message = "";
+
             for(int i = 0; i < arr.length(); i++) {
                 JSONObject jsonPart = arr.getJSONObject(i);
 
-                Log.i("Main", jsonPart.getString("main"));
-                Log.i("Description", jsonPart.getString("description"));
+                String main = jsonPart.getString("main");
+                String description =jsonPart.getString("description");
+
+                if (!main.equals("") && !description.equals("")) {
+                    message += main + " : " + description + "\r\n";
+                }
+            }
+
+            if (!message.equals("")) {
+                resultsTextView.setText(message);
             }
 
         } catch(Exception e) {
