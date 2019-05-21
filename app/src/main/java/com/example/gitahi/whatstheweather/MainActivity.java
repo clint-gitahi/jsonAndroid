@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             mgr.hideSoftInputFromWindow(editText.getWindowToken(), 0);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), "Could Not Find Weather", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Could Not Find Weather", Toast.LENGTH_LONG).show();
         }
     }
 
