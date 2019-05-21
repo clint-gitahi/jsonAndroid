@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,11 +38,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void getWeather(View view) {
 
-        DownloadTask task = new DownloadTask();
-        task.execute("https://samples.openweathermap.org/data/2.5/weather?q="+ editText.getText().toString() +"&appid=b6907d289e10d714a6e88b30761fae22");
+        try {
+            DownloadTask task = new DownloadTask();
 
-        InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        mgr.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+            String encodedCityName = URLEncoder.encode(editText.getText().toString(), "UTF-8");
+
+            task.execute("https://samples.openweathermap.org/data/2.5/weather?q=" + encodedCityName + "&appid=b6907d289e10d714a6e88b30761fae22");
+
+            InputMethodManager mgr = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            mgr.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), "Could Not Find Weather", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public class DownloadTask extends AsyncTask<String, Void, String> {
@@ -69,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
 
         } catch(Exception e ) {
             e.printStackTrace();
+
+            Toast.makeText(getApplicationContext(), "Could Not Find Weather", Toast.LENGTH_SHORT).show();
             return null;
         }
     }
@@ -104,10 +116,14 @@ public class MainActivity extends AppCompatActivity {
 
             if (!message.equals("")) {
                 resultsTextView.setText(message);
+            } else {
+                Toast.makeText(getApplicationContext(), "Could Not Find Weather", Toast.LENGTH_SHORT).show();
             }
 
         } catch(Exception e) {
+            Toast.makeText(getApplicationContext(), "Could Not Find Weather", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+
         }
 
     }
